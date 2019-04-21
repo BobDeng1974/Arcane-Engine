@@ -60,6 +60,33 @@ namespace arcane
 		return glm::dot(abCrossap, abCrossac) >= 0;
 	}
 
+	bool NavigationMesh::TriangleLineIntersect(TrianglePrim& tri, glm::vec3& start, glm::vec3& end)
+	{
+		glm::vec3 a = glm::vec3(tri.a->x, tri.a->y, tri.a->z);
+		glm::vec3 b = glm::vec3(tri.b->x, tri.b->y, tri.b->z);
+		glm::vec3 c = glm::vec3(tri.c->x, tri.a->y, tri.c->z);
+		glm::vec3 start1 = glm::vec3(start.x, start.y, start.z);
+		glm::vec3 end1 = glm::vec3(end.x, end.y, end.z);
+
+		return LineSegmentLineSegmentIntersection(b - a, end1 - start1) ||
+		LineSegmentLineSegmentIntersection(c - a, end1 - start1) ||
+		LineSegmentLineSegmentIntersection(c - b, end1 - start1);
+	}
+
+	bool NavigationMesh::LineSegmentLineSegmentIntersection(glm::vec3& ab, glm::vec3& cd)
+	{
+		float t = -1; // For the equation of ab
+		float s = -1; // For the equation of cd
+
+		if ((-cd.y * ab.x) + (cd.x * ab.y) == 0.f || ab.x == 0.f)
+			return false;
+
+		t = ((cd.x * ab.z) - (cd.z * ab.x)) / ((-cd.z * ab.x) + (cd.x * ab.z));
+		s = ((t * cd.x) - cd.x) / ab.x;
+
+		return t >= 0.f && t <= 1.f && s >= 0.f && s <= 1.f;
+	}
+
 	float NavigationMesh::GetSlopePoints(const glm::vec3& point1, const glm::vec3& point2)
 	{
 		glm::vec3 difference = point2 - point1; // Getting the difference vectors

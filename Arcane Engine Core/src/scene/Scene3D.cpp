@@ -77,7 +77,7 @@ namespace arcane {
 						PathfindingUtil::DFS(m_Terrain.sampleHeightfieldNearest(m_Agent->getPosition()), m_Terrain.sampleHeightfieldNearest(collisionPoint), m_NavMesh->getTriangulatedPolygon(), m_NavMesh->getPointToTriangle());
 					}
 					// Tell the agent the path was updated
-					m_Agent->resetPath();
+					m_Agent->resetPath(m_NavMesh->m_PointToTriangle);
 				}
 				else if (NavmeshPane::getRaycastType() == RaycastType::Static_Obstacle) {
 					// Place an obstacle
